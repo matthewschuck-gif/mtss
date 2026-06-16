@@ -664,75 +664,6 @@
       </div>
     </div>
 
-    <!-- Behavior Referral Form -->
-    <div class="sec-head" style="margin-top:0.5rem;"><h2>MTSS Behavior Referral Form</h2><p>Complete this before bringing a student to an MTSS meeting. Covers student info, services, concerns, and interventions tried.</p></div>
-    <div class="card" id="behavior-form" style="padding:1.5rem;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:0.95rem;font-weight:800;color:var(--purple);">Section 1.1 — Student Information</div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn-add" onclick="printBehaviorForm()" style="background:rgba(73,14,111,0.1);color:var(--purple);font-size:0.75rem;padding:0.35rem 0.85rem;">🖨 Print</button>
-          <button class="btn-add" onclick="clearBehaviorForm()" style="background:rgba(220,38,38,0.08);color:#dc2626;font-size:0.75rem;padding:0.35rem 0.85rem;">Clear Form</button>
-        </div>
-      </div>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.25rem;">
-        <div><label class="form-label">Student Name</label><input class="form-input" id="bf-name" placeholder="Last, First" /></div>
-        <div><label class="form-label">Grade</label><input class="form-input" id="bf-grade" placeholder="e.g. 8" /></div>
-        <div><label class="form-label">Teacher / Homeroom</label><input class="form-input" id="bf-teacher" placeholder="Teacher name" /></div>
-        <div><label class="form-label">Date of 1st Meeting</label><input class="form-input" id="bf-date1" type="date" /></div>
-        <div><label class="form-label">Date of 2nd Meeting</label><input class="form-input" id="bf-date2" type="date" /></div>
-        <div><label class="form-label">Parents Aware?</label>
-          <select class="form-input" id="bf-parents"><option value="">Select…</option><option>Yes</option><option>No</option><option>In Progress</option></select></div>
-      </div>
-
-      <div style="margin-bottom:1.25rem;">
-        <label class="form-label">Parent Contact Notes</label>
-        <textarea class="form-input" id="bf-parent-notes" rows="3" placeholder="Date of contact, outcome, parent response…" style="resize:vertical;"></textarea>
-      </div>
-
-      <div style="font-size:0.9rem;font-weight:800;color:var(--purple);margin-bottom:0.75rem;">Areas of Concern</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1.25rem;" id="bf-concerns-grid">
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining quality of work" /><span>Declining quality of work</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining grades" /><span>Declining grades</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Homework not handed in" /><span>Homework not handed in</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Inattentive / difficulty focusing" /><span>Inattentive / difficulty focusing</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining motivation" /><span>Declining motivation</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Disruptive in class" /><span>Disruptive in class</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Defiant / Non-Compliance" /><span>Defiant / Non-Compliance</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Withdrawn / socially isolated" /><span>Withdrawn / socially isolated</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Verbal aggression" /><span>Verbal aggression</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Physical aggression" /><span>Physical aggression</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Attendance / chronic absences" /><span>Attendance / chronic absences</span></label>
-        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Increasing non-involvement" /><span>Increasing non-involvement</span></label>
-      </div>
-
-      <div style="margin-bottom:1.25rem;">
-        <label class="form-label">Describe specific behaviors / patterns</label>
-        <textarea class="form-input" id="bf-behavior-desc" rows="3" placeholder="Be specific — what does it look like, how often, under what conditions?" style="resize:vertical;"></textarea>
-      </div>
-
-      <div style="font-size:0.9rem;font-weight:800;color:var(--purple);margin-bottom:0.75rem;">Section 1.2 — Interventions Tried</div>
-      <div style="overflow-x:auto;">
-        <table style="width:100%;border-collapse:collapse;font-size:0.78rem;" id="bf-interventions-table">
-          <thead>
-            <tr style="border-bottom:2px solid var(--border);">
-              <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Intervention</th>
-              <th style="padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">N/A</th>
-              <th style="padding:6px 8px;color:#16a34a;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">✓ Worked</th>
-              <th style="padding:6px 8px;color:#dc2626;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">✗ Didn't</th>
-              <th style="padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">Not Tried</th>
-              <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Notes / Dates</th>
-            </tr>
-          </thead>
-          <tbody id="bf-interventions-body"></tbody>
-        </table>
-      </div>
-
-      <div style="margin-top:1.25rem;">
-        <label class="form-label">Additional Notes / Next Steps</label>
-        <textarea class="form-input" id="bf-notes" rows="3" placeholder="Team recommendations, next meeting agenda items…" style="resize:vertical;"></textarea>
-      </div>
-    </div>
   </div>
 
   <!-- ══ TAB: Resources ══ -->
@@ -1122,106 +1053,12 @@ function applyEdits() {
   });
 }
 
-// ══ BEHAVIOR FORM ══
-const INTERVENTIONS = [
-  'Change in seating – proximity to teacher',
-  'Change in seating – proximity to peers',
-  'Special considerations with work partners/groups',
-  'Individual checks for understanding',
-  'Academic adaptations (graphic organizers, assignment length)',
-  'Testing adaptations (oral, time extensions)',
-  'Organizational supports (checklists, color coding)',
-  'Additional adult support (para, individualized teacher time)',
-  'Increased opportunities for movement / flexible seating',
-  'Cues for behavior (secret signal, checklist on desk)',
-  'Distractibility considerations (limited materials, privacy carrel)',
-  'Schedule breaks / anytime pass',
-  'Point sheet / behavior chart',
-  'Compass Mark group',
-  'Check-In/Check-Out (CICO)',
-  'Counselor check-in',
-  'Parent contact / communication plan',
-  'Positive reinforcement / recognition system',
-];
-
-function buildInterventionsTable() {
-  const tbody = document.getElementById('bf-interventions-body');
-  if (!tbody) return;
-  tbody.innerHTML = INTERVENTIONS.map((name, i) => `
-    <tr class="interv-row">
-      <td>${name}</td>
-      ${['na','worked','didnt','nottried'].map(v => `<td style="text-align:center"><input type="radio" name="interv-${i}" value="${v}" /></td>`).join('')}
-      <td><input type="text" placeholder="Notes…" id="interv-note-${i}" /></td>
-    </tr>`).join('');
-}
-
-function clearBehaviorForm() {
-  if (!confirm('Clear all form fields?')) return;
-  ['bf-name','bf-grade','bf-teacher','bf-date1','bf-date2','bf-parent-notes','bf-behavior-desc','bf-notes'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('bf-parents').value = '';
-  document.querySelectorAll('.bf-concern').forEach(c => c.checked = false);
-  document.querySelectorAll('.interv-row input').forEach(i => { if(i.type==='radio') i.checked=false; else i.value=''; });
-}
-
-function printBehaviorForm() {
-  const name = document.getElementById('bf-name').value || 'Student';
-  const grade = document.getElementById('bf-grade').value;
-  const teacher = document.getElementById('bf-teacher').value;
-  const date1 = document.getElementById('bf-date1').value;
-  const date2 = document.getElementById('bf-date2').value;
-  const parents = document.getElementById('bf-parents').value;
-  const parentNotes = document.getElementById('bf-parent-notes').value;
-  const behaviorDesc = document.getElementById('bf-behavior-desc').value;
-  const notes = document.getElementById('bf-notes').value;
-  const concerns = [...document.querySelectorAll('.bf-concern:checked')].map(c => c.value);
-
-  const intervRows = INTERVENTIONS.map((name, i) => {
-    const checked = document.querySelector(`input[name="interv-${i}"]:checked`);
-    const status = checked ? {na:'N/A',worked:'✓ Successful',didnt:'✗ Unsuccessful',nottried:'Not Trialed'}[checked.value] : '';
-    const noteVal = document.getElementById(`interv-note-${i}`)?.value || '';
-    if (!status && !noteVal) return '';
-    return `<tr><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px">${name}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px;white-space:nowrap">${status}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px">${noteVal}</td></tr>`;
-  }).filter(Boolean).join('');
-
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><title>MTSS Referral — ${name}</title>
-  <style>body{font-family:Arial,sans-serif;padding:24px;color:#1a0030;max-width:800px;margin:0 auto}
-  h1{font-size:18px;color:#490e6f;margin-bottom:4px}h2{font-size:13px;color:#490e6f;margin:16px 0 6px;border-bottom:2px solid #490e6f;padding-bottom:3px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;margin-bottom:8px}
-  .field{margin-bottom:4px}.label{font-size:10px;text-transform:uppercase;color:#7c5fa0;letter-spacing:0.05em}
-  .val{font-weight:600}table{width:100%;border-collapse:collapse}
-  @media print{body{padding:12px}}</style></head><body>
-  <h1>EMS MTSS Behavior Referral Form</h1>
-  <div style="font-size:11px;color:#7c5fa0;margin-bottom:12px">Printed ${new Date().toLocaleDateString()}</div>
-  <h2>Section 1.1 — Student Information</h2>
-  <div class="grid">
-    <div class="field"><div class="label">Student Name</div><div class="val">${name}</div></div>
-    <div class="field"><div class="label">Grade</div><div class="val">${grade||'—'}</div></div>
-    <div class="field"><div class="label">Teacher</div><div class="val">${teacher||'—'}</div></div>
-    <div class="field"><div class="label">Parents Aware</div><div class="val">${parents||'—'}</div></div>
-    <div class="field"><div class="label">1st Meeting</div><div class="val">${date1||'—'}</div></div>
-    <div class="field"><div class="label">2nd Meeting</div><div class="val">${date2||'—'}</div></div>
-  </div>
-  ${parentNotes?`<div class="field"><div class="label">Parent Contact Notes</div><div>${parentNotes}</div></div>`:''}
-  ${concerns.length?`<h2>Areas of Concern</h2><ul style="font-size:12px;margin:0;padding-left:16px">${concerns.map(c=>`<li>${c}</li>`).join('')}</ul>`:''}
-  ${behaviorDesc?`<h2>Behavior Description</h2><div style="font-size:12px">${behaviorDesc}</div>`:''}
-  ${intervRows?`<h2>Section 1.2 — Interventions Tried</h2><table><thead><tr><th style="text-align:left;font-size:11px;padding:4px 8px;background:#f5f3f8">Intervention</th><th style="font-size:11px;padding:4px 8px;background:#f5f3f8">Status</th><th style="text-align:left;font-size:11px;padding:4px 8px;background:#f5f3f8">Notes</th></tr></thead><tbody>${intervRows}</tbody></table>`:''}
-  ${notes?`<h2>Notes / Next Steps</h2><div style="font-size:12px">${notes}</div>`:''}
-  </body></html>`);
-  win.document.close();
-  win.print();
-}
-
 // ── Init ──
 window.addEventListener('DOMContentLoaded', () => {
   initDocUrl();
   applyEdits();
   renderChecklist();
   renderReferrals();
-  buildInterventionsTable();
   document.getElementById('doc-modal').style.display = 'none';
 });
 </script>
