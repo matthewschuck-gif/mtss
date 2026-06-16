@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EMS MTSS Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f3f8;
+    --card: #ffffff;
+    --purple: #490e6f;
+    --purple-mid: #6b1fa3;
+    --purple-light: #9333ea;
+    --gold: #c47f00;
+    --border: rgba(73, 14, 111, 0.14);
+    --text: #1a0030;
+    --muted: #7c5fa0;
+    --t1: #16a34a;
+    --t2: #c47f00;
+    --t3: #dc2626;
+    --t1-bg: #f0fdf4;
+    --t2-bg: #fffbeb;
+    --t3-bg: #fef2f2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: #f2ede6;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cpath d='M0 75 Q75 45 150 90 Q225 135 300 105' stroke='%23c4b49a' stroke-width='2.5' fill='none' opacity='0.55'/%3E%3Cpath d='M0 180 Q90 150 180 195 Q255 232 300 210' stroke='%23c4b49a' stroke-width='2' fill='none' opacity='0.4'/%3E%3Cpath d='M-30 255 Q45 225 120 262 Q210 307 300 278' stroke='%23c4b49a' stroke-width='2' fill='none' opacity='0.45'/%3E%3Cpath d='M30 0 Q60 60 45 150 Q30 225 75 300' stroke='%23c4b49a' stroke-width='2.5' fill='none' opacity='0.5'/%3E%3Cpath d='M195 -15 Q165 75 210 150 Q240 210 225 300' stroke='%23c4b49a' stroke-width='2' fill='none' opacity='0.38'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 300px 300px;
+  }
+
+  /* ── Layout ── */
+  .page { max-width: 1140px; margin: 0 auto; padding: 0 1.25rem 5rem; }
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 1.25rem 0 0;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--purple); text-decoration: none; opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .back-btn:hover { opacity: 1; }
+
+  /* ── Hero ── */
+  .hero { text-align: center; padding: 3rem 0 2.5rem; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(73,14,111,0.08); border: 1px solid rgba(73,14,111,0.18);
+    border-radius: 20px; padding: 5px 14px;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--purple); text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 900;
+    letter-spacing: -0.02em; color: var(--purple); line-height: 1.05;
+    margin-bottom: 0.6rem;
+  }
+  .hero p { font-size: 1rem; color: var(--muted); max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+  /* ── Nav Tabs ── */
+  .tabs {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+    margin: 1.75rem 0 2rem;
+  }
+  .tab-btn {
+    padding: 0.4rem 1rem; border-radius: 20px;
+    border: 1px solid rgba(73,14,111,0.2);
+    background: rgba(255,255,255,0.7); color: var(--muted);
+    font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tab-btn:hover { background: white; color: var(--purple); border-color: rgba(73,14,111,0.35); }
+  .tab-btn.active {
+    background: var(--purple); color: white; border-color: var(--purple);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Section heading ── */
+  .sec-head { margin-bottom: 1.25rem; }
+  .sec-head h2 { font-size: 1.3rem; font-weight: 800; color: var(--purple); }
+  .sec-head p { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.25rem;
+    box-shadow: 0 1px 6px rgba(73,14,111,0.07);
+  }
+
+  /* ── Tier Matrix ── */
+  .tier-grid {
+    display: grid;
+    grid-template-columns: 120px repeat(3, 1fr);
+    gap: 6px;
+  }
+  .tier-header {
+    border-radius: 10px; padding: 0.6rem 0.5rem;
+    text-align: center; font-weight: 800; font-size: 0.82rem;
+    letter-spacing: 0.04em;
+  }
+  .tier-header.t1 { background: var(--t1-bg); color: var(--t1); border: 1.5px solid #bbf7d0; }
+  .tier-header.t2 { background: var(--t2-bg); color: var(--t2); border: 1.5px solid #fde68a; }
+  .tier-header.t3 { background: var(--t3-bg); color: var(--t3); border: 1.5px solid #fecaca; }
+  .tier-header.label { background: transparent; color: var(--purple); font-size: 0.75rem; display: flex; align-items: center; padding-left: 0; }
+  .tier-domain-label {
+    border-radius: 8px; padding: 0.5rem 0.6rem;
+    background: rgba(73,14,111,0.05);
+    font-size: 0.78rem; font-weight: 700; color: var(--purple);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tier-cell {
+    background: white; border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.6rem;
+    font-size: 0.74rem; color: var(--text); line-height: 1.5;
+  }
+  .tier-cell ul { padding-left: 1rem; }
+  .tier-cell li { margin-bottom: 2px; }
+  .tier-percent {
+    display: inline-block; font-size: 0.68rem; font-weight: 700;
+    padding: 1px 6px; border-radius: 10px; margin-bottom: 4px;
+  }
+  .tier-percent.t1 { background: #dcfce7; color: #15803d; }
+  .tier-percent.t2 { background: #fef9c3; color: #a16207; }
+  .tier-percent.t3 { background: #fee2e2; color: #b91c1c; }
+
+  /* ── Team Meetings ── */
+  .meetings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+  .meeting-card {
+    background: white; border: 1px solid var(--border); border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 1px 4px rgba(73,14,111,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .meeting-card:hover { box-shadow: 0 4px 20px rgba(73,14,111,0.1); transform: translateY(-2px); }
+  .meeting-name { font-size: 0.95rem; font-weight: 800; color: var(--purple); margin-bottom: 3px; }
+  .meeting-meta { font-size: 0.76rem; color: var(--muted); font-weight: 600; margin-bottom: 8px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .meeting-meta span { display: flex; align-items: center; gap: 3px; }
+  .meeting-members { font-size: 0.75rem; color: #5b4080; line-height: 1.55; }
+  .meeting-members strong { color: var(--purple); }
+  .meeting-tag {
+    display: inline-block; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 10px; margin-bottom: 8px;
+  }
+  .tag-core { background: rgba(73,14,111,0.1); color: var(--purple); }
+  .tag-intervention { background: #fef3c7; color: #92400e; }
+  .tag-admin { background: #ede9fe; color: #5b21b6; }
+  .tag-advisory { background: #d1fae5; color: #065f46; }
+
+  /* ── Checklist ── */
+  .checklist-domains { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .checklist-domain { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.2rem; }
+  .checklist-domain-title {
+    font-size: 0.9rem; font-weight: 800; color: var(--purple);
+    margin-bottom: 0.75rem; display: flex; align-items: center; gap: 8px;
+  }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 9px;
+    padding: 6px 0; border-top: 1px solid rgba(73,14,111,0.06);
+    cursor: pointer;
+  }
+  .checklist-item:first-of-type { border-top: none; }
+  .chk-box {
+    width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0;
+    border: 2px solid rgba(73,14,111,0.25); background: white;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; margin-top: 1px;
+  }
+  .chk-box.checked { background: var(--purple); border-color: var(--purple); }
+  .chk-box.checked::after { content: '✓'; color: white; font-size: 11px; font-weight: 800; }
+  .chk-label { font-size: 0.8rem; color: var(--text); line-height: 1.5; }
+  .chk-label.checked { color: var(--muted); text-decoration: line-through; }
+  .domain-progress { height: 4px; border-radius: 2px; background: rgba(73,14,111,0.1); margin-bottom: 0.75rem; overflow: hidden; }
+  .domain-progress-bar { height: 100%; background: var(--purple); border-radius: 2px; transition: width 0.3s; }
+
+  /* ── Referral Tracker ── */
+  .referral-bar {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: flex-end;
+  }
+  .referral-bar input, .referral-bar select {
+    font-family: 'Outfit', sans-serif; font-size: 0.82rem;
+    padding: 0.45rem 0.75rem; border-radius: 10px;
+    border: 1.5px solid rgba(73,14,111,0.2); background: white; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+  .referral-bar input:focus, .referral-bar select:focus { border-color: var(--purple); }
+  .referral-bar input { flex: 1; min-width: 140px; }
+  .btn-add {
+    padding: 0.45rem 1.1rem; border-radius: 10px;
+    background: var(--purple); color: white;
+    border: none; font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+  .btn-add:hover { opacity: 0.85; }
+  .referral-table { width: 100%; border-collapse: collapse; }
+  .referral-table th {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--muted); padding: 0.4rem 0.75rem; text-align: left;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .referral-table td {
+    font-size: 0.82rem; color: var(--text);
+    padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(73,14,111,0.06);
+    vertical-align: middle;
+  }
+  .referral-table tr:last-child td { border-bottom: none; }
+  .referral-table tr:hover td { background: rgba(73,14,111,0.03); }
+  .tier-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 800;
+    padding: 2px 8px; border-radius: 10px;
+  }
+  .tier-badge.t1 { background: #dcfce7; color: #15803d; }
+  .tier-badge.t2 { background: #fef9c3; color: #a16207; }
+  .tier-badge.t3 { background: #fee2e2; color: #b91c1c; }
+  .domain-badge {
+    display: inline-block; font-size: 0.68rem; font-weight: 600;
+    padding: 2px 7px; border-radius: 8px;
+    background: rgba(73,14,111,0.08); color: var(--purple);
+  }
+  .btn-remove {
+    background: none; border: none; color: #dc2626; cursor: pointer;
+    font-size: 0.75rem; font-weight: 700; opacity: 0.4; transition: opacity 0.2s;
+    padding: 2px 6px;
+  }
+  .btn-remove:hover { opacity: 1; }
+  .empty-state {
+    text-align: center; padding: 2.5rem 1rem;
+    color: var(--muted); font-size: 0.85rem;
+  }
+  .empty-state div:first-child { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.3; }
+
+  /* ── Resources ── */
+  .resources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.85rem; }
+  .resource-card {
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 1rem 1.1rem; text-decoration: none; color: inherit;
+    transition: all 0.2s; display: block;
+  }
+  .resource-card:hover { border-color: rgba(73,14,111,0.3); box-shadow: 0 3px 14px rgba(73,14,111,0.09); transform: translateY(-2px); }
+  .resource-icon { font-size: 1.3rem; margin-bottom: 6px; }
+  .resource-name { font-size: 0.85rem; font-weight: 700; color: var(--purple); }
+  .resource-desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; line-height: 1.45; }
+
+  /* ── Stats bar ── */
+  .stats-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .stat-chip {
+    background: white; border: 1px solid var(--border); border-radius: 10px;
+    padding: 0.5rem 1rem; display: flex; flex-direction: column; align-items: center; min-width: 80px;
+  }
+  .stat-num { font-size: 1.4rem; font-weight: 900; color: var(--purple); line-height: 1; }
+  .stat-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+
+  /* ── Behavior Form ── */
+  .form-label { display:block; font-size:0.72rem; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .form-input {
+    width:100%; padding:0.45rem 0.75rem; border-radius:10px;
+    border:1.5px solid rgba(73,14,111,0.18); background:white; color:var(--text);
+    font-family:'Outfit',sans-serif; font-size:0.82rem; outline:none; transition:border-color 0.2s;
+  }
+  .form-input:focus { border-color:var(--purple); }
+  select.form-input { cursor:pointer; }
+  .concern-item {
+    display:flex; align-items:center; gap:7px; font-size:0.78rem; color:var(--text);
+    cursor:pointer; padding:5px 8px; border-radius:8px; transition:background 0.15s;
+  }
+  .concern-item:hover { background:rgba(73,14,111,0.05); }
+  .concern-item input[type=checkbox] { accent-color:var(--purple); width:14px; height:14px; flex-shrink:0; }
+  .interv-row td { padding:5px 8px; border-bottom:1px solid rgba(73,14,111,0.06); vertical-align:middle; }
+  .interv-row td:first-child { color:var(--text); font-size:0.78rem; }
+  .interv-row input[type=radio] { accent-color:var(--purple); }
+  .interv-row input[type=text] {
+    width:100%; padding:4px 8px; border-radius:7px;
+    border:1px solid rgba(73,14,111,0.15); background:white; color:var(--text);
+    font-family:'Outfit',sans-serif; font-size:0.75rem; outline:none;
+  }
+  .interv-row input[type=text]:focus { border-color:var(--purple); }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fade-in-up 0.5s ease both; }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- Floating edit mode button -->
+  <div style="position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+    <button id="edit-mode-btn" onclick="toggleEditMode()" style="padding:0.5rem 1.1rem;border-radius:20px;border:1.5px solid rgba(73,14,111,0.3);background:white;color:var(--purple);font-family:'Outfit',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;box-shadow:0 2px 12px rgba(73,14,111,0.15);transition:all 0.2s;letter-spacing:0.04em;">✎ Edit Content</button>
+    <div id="edit-hint" style="display:none;font-size:0.7rem;color:var(--muted);background:white;padding:4px 10px;border-radius:10px;border:1px solid var(--border);box-shadow:0 1px 6px rgba(73,14,111,0.1);">Click any highlighted text to edit · Blur to save</div>
+  </div>
+
+  <a class="back-btn" href="https://matthewschuck-gif.github.io/emshub/">
+    ← The Mountain
+  </a>
+
+  <!-- Hero -->
+  <div class="hero fade-in">
+    <h1>Multi-Tiered System<br>of Supports</h1>
+    <p>A coordinated framework for early identification, targeted intervention, and data-driven decision making across all student domains.</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('overview')">Tier Overview</button>
+    <button class="tab-btn" onclick="switchTab('meetings')">Team Meetings</button>
+    <button class="tab-btn" onclick="switchTab('checklist')">Tier 1 Checklist</button>
+    <button class="tab-btn" onclick="switchTab('tracker')">Referral Tracker</button>
+    <button class="tab-btn" onclick="switchTab('powerschool')">PowerSchool</button>
+    <button class="tab-btn" onclick="switchTab('resources')">Resources</button>
+  </div>
+
+  <!-- ══ TAB: Tier Overview ══ -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="sec-head">
+      <h2>The Three-Tier Framework</h2>
+      <p>Interventions organized by intensity across all five MTSS domains at EMS.</p>
+    </div>
+
+    <!-- Tier legend -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1.25rem;">
+      <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;font-weight:700;color:#15803d;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#16a34a;display:inline-block;"></span>
+        Tier 1 · Universal (~80% of students)
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;font-weight:700;color:#a16207;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#c47f00;display:inline-block;"></span>
+        Tier 2 · Targeted (~15% of students)
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;font-size:0.78rem;font-weight:700;color:#b91c1c;">
+        <span style="width:10px;height:10px;border-radius:50%;background:#dc2626;display:inline-block;"></span>
+        Tier 3 · Intensive (~5% of students)
+      </div>
+    </div>
+
+    <div class="card" style="padding:1rem;overflow-x:auto;">
+      <div class="tier-grid" style="min-width:620px;">
+        <!-- Headers -->
+        <div class="tier-header label">Domain</div>
+        <div class="tier-header t1">Tier 1<br><span style="font-weight:600;font-size:0.72rem;">All Students</span></div>
+        <div class="tier-header t2">Tier 2<br><span style="font-weight:600;font-size:0.72rem;">Small Group</span></div>
+        <div class="tier-header t3">Tier 3<br><span style="font-weight:600;font-size:0.72rem;">Individualized</span></div>
+
+        <!-- Attendance -->
+        <div class="tier-domain-label">📅 Attendance</div>
+        <div class="tier-cell"><ul>
+          <li>Attendance monitoring</li>
+          <li>Positive home contact</li>
+          <li>Celebrate attendance milestones</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Check-In/Check-Out (CICO)</li>
+          <li>Mentor match</li>
+          <li>Attendance contract</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Individualized attendance plan</li>
+          <li>Family meeting</li>
+          <li>Community referral</li>
+        </ul></div>
+
+        <!-- SE/Mental Health -->
+        <div class="tier-domain-label">💛 SE / Mental Health</div>
+        <div class="tier-cell"><ul>
+          <li>Morning greeting at door</li>
+          <li>Classroom check-in</li>
+          <li>LRG traits integration</li>
+          <li>SEL curriculum</li>
+        </ul>
+        <a href="https://clashofclasses.org" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:0.6rem;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;color:#490e6f;text-decoration:none;background:rgba(73,14,111,0.08);border:1px solid rgba(73,14,111,0.2);border-radius:8px;padding:3px 9px;">⚔️ Clash of Classes ↗</a>
+        </div>
+        <div class="tier-cell"><ul>
+          <li>Small group counseling</li>
+          <li>Coping skills groups</li>
+          <li>CICO with counselor</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Individual counseling</li>
+          <li>Outside agency referral</li>
+          <li>Wraparound services</li>
+        </ul></div>
+
+        <!-- Behavior -->
+        <div class="tier-domain-label">🔵 Behavior</div>
+        <div class="tier-cell"><ul>
+          <li>School-wide expectations (PBIS)</li>
+          <li>Positive behavior recognition</li>
+          <li>Classroom routines & procedures</li>
+          <li>LRG point system (CoC)</li>
+        </ul>
+        <a href="https://matthewschuck-gif.github.io/mountaineer-peaks/" target="_blank" style="display:inline-flex;align-items:center;gap:5px;margin-top:0.6rem;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;color:#1d4ed8;text-decoration:none;background:rgba(29,78,216,0.07);border:1px solid rgba(29,78,216,0.2);border-radius:8px;padding:3px 9px;">⛰️ Mountaineer Peaks ↗</a>
+        </div>
+        <div class="tier-cell"><ul>
+          <li>Behavior intervention plan (BIP lite)</li>
+          <li>Social skills group</li>
+          <li>Restorative practices</li>
+          <li>Squad check-in</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Functional Behavior Assessment</li>
+          <li>Formal BIP</li>
+          <li>Crisis planning</li>
+          <li>BIC tracking</li>
+        </ul></div>
+
+        <!-- Academics -->
+        <div class="tier-domain-label">📚 Academics</div>
+        <div class="tier-cell"><ul>
+          <li>Clear learning targets</li>
+          <li>Flexible grouping</li>
+          <li>High-impact strategies</li>
+          <li>Timely feedback loops</li>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:0.6rem;">
+          <a href="#" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;color:#0369a1;text-decoration:none;background:rgba(3,105,161,0.07);border:1px solid rgba(3,105,161,0.2);border-radius:8px;padding:3px 9px;">📐 Core Extension ↗</a>
+          <a href="#" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;color:#0369a1;text-decoration:none;background:rgba(3,105,161,0.07);border:1px solid rgba(3,105,161,0.2);border-radius:8px;padding:3px 9px;">📊 Proficiency Scale ↗</a>
+          <a href="https://matthewschuck-gif.github.io/emshub/" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;font-weight:700;letter-spacing:0.05em;color:#0369a1;text-decoration:none;background:rgba(3,105,161,0.07);border:1px solid rgba(3,105,161,0.2);border-radius:8px;padding:3px 9px;">🏔 LRG Hub ↗</a>
+        </div>
+        </div>
+        <div class="tier-cell"><ul>
+          <li>Differentiated small group</li>
+          <li>Progress monitoring</li>
+          <li>Tutoring / re-teach cycles</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Intensive tutoring (1:1)</li>
+          <li>IEP / 504 consideration</li>
+          <li>Specialized curriculum</li>
+        </ul></div>
+
+        <!-- Work Completion -->
+        <div class="tier-domain-label">✅ Work Completion</div>
+        <div class="tier-cell"><ul>
+          <li>Clear expectations & due dates</li>
+          <li>Organizational supports</li>
+          <li>Homework help structures</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Check-in on assignment tracker</li>
+          <li>Structured study hall</li>
+          <li>Parent communication plan</li>
+        </ul></div>
+        <div class="tier-cell"><ul>
+          <li>Individualized task plan</li>
+          <li>Reduced workload w/ goals</li>
+          <li>Daily work log</li>
+        </ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: Team Meetings ══ -->
+  <div class="tab-panel" id="tab-meetings">
+    <div class="sec-head">
+      <h2>EMS MTSS Team Structure</h2>
+      <p>Draft 2024–2025. Six meeting types coordinate universal, targeted, and intensive support.</p>
+    </div>
+    <div class="meetings-grid">
+      <div class="meeting-card">
+        <span class="meeting-tag tag-core">Core MTSS</span>
+        <div class="meeting-name">MTSS Team Meeting</div>
+        <div class="meeting-meta">
+          <span>📅 Monthly</span>
+          <span>⏱ 60 min</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> Principal &amp; AP<br>
+          <strong>Members:</strong> Instructional Coaches, School Psychologist, Counselors, Behavior Analyst, Special Ed Coordinator<br>
+          <strong>Focus:</strong> School-wide data review, Tier 1 fidelity, resource allocation, intervention planning
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-admin">Admin</span>
+        <div class="meeting-name">Admin MTSS Meeting</div>
+        <div class="meeting-meta">
+          <span>📅 Weekly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> Principal<br>
+          <strong>Members:</strong> AP, Dean of Students<br>
+          <strong>Focus:</strong> Urgent student concerns, discipline patterns, quick-response coordination
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-intervention">Intervention</span>
+        <div class="meeting-name">Intervention Huddle</div>
+        <div class="meeting-meta">
+          <span>📅 Bi-weekly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> Instructional Coaches<br>
+          <strong>Members:</strong> Counselors, School Psychologist, Behavior Analyst<br>
+          <strong>Focus:</strong> Tier 2 &amp; 3 student progress, intervention fidelity, problem-solving for referred students
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-advisory">Advisory</span>
+        <div class="meeting-name">Liaison Meeting</div>
+        <div class="meeting-meta">
+          <span>📅 Monthly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> AP / Counseling<br>
+          <strong>Members:</strong> Grade-level team leads, Community liaisons<br>
+          <strong>Focus:</strong> Community partnerships, external agency coordination, family engagement
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-core">Discipline</span>
+        <div class="meeting-name">Discipline Committee</div>
+        <div class="meeting-meta">
+          <span>📅 Monthly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> Principal / AP<br>
+          <strong>Members:</strong> Dean of Students, Counselors, Behavior Analyst<br>
+          <strong>Focus:</strong> ODR (office discipline referral) data review, equity analysis, restorative practice follow-through
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-intervention">Competition</span>
+        <div class="meeting-name">Clash of Classes Committee</div>
+        <div class="meeting-meta">
+          <span>📅 Monthly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> CoC Coordinator / AP<br>
+          <strong>Members:</strong> Squad General advisors, Coaches, Counselors<br>
+          <strong>Focus:</strong> LRG point review, squad standings, upcoming events, Tier 1 positive behavior data integration, Trait Dough logging fidelity
+        </div>
+      </div>
+
+      <div class="meeting-card">
+        <span class="meeting-tag tag-advisory">Student Voice</span>
+        <div class="meeting-name">Student Council / MLC</div>
+        <div class="meeting-meta">
+          <span>📅 Monthly</span>
+        </div>
+        <div class="meeting-members">
+          <strong>Led by:</strong> MLC Advisors<br>
+          <strong>Members:</strong> Student representatives from all leadership tracks<br>
+          <strong>Focus:</strong> Student feedback on school climate, Tier 1 initiatives, LRG integration, Clash of Classes planning
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: Tier 1 Checklist ══ -->
+  <div class="tab-panel" id="tab-checklist">
+    <div class="sec-head">
+      <h2>Tier 1 Implementation Checklist</h2>
+      <p>Self-assess your classroom or school-wide Tier 1 fidelity across three domains. Checks are saved locally.</p>
+    </div>
+
+    <div class="stats-bar" id="checklist-stats"></div>
+
+    <div class="checklist-domains" id="checklist-container"></div>
+
+    <div style="margin-top:1rem;display:flex;gap:8px;">
+      <button class="btn-add" onclick="resetChecklist()" style="background:rgba(73,14,111,0.1);color:var(--purple);">Reset All</button>
+    </div>
+  </div>
+
+  <!-- ══ TAB: Referral Tracker ══ -->
+  <div class="tab-panel" id="tab-tracker">
+    <div class="sec-head">
+      <h2>Intervention Referral Tracker</h2>
+      <p>Track active interventions by tier and domain — no student names. Use <a href="https://behaviorinterventioncenter.com" target="_blank" style="color:var(--purple);font-weight:700;">BIC ↗</a> for student-specific records.</p>
+    </div>
+
+    <div class="referral-bar">
+      <input id="ref-note" type="text" placeholder="Brief description (no student names)" style="flex:2;" />
+      <select id="ref-tier">
+        <option value="">Tier…</option>
+        <option value="1">Tier 1 Monitor</option>
+        <option value="2">Tier 2 Targeted</option>
+        <option value="3">Tier 3 Intensive</option>
+      </select>
+      <select id="ref-domain">
+        <option value="">Domain…</option>
+        <option value="Attendance">Attendance</option>
+        <option value="SE/Mental Health">SE / Mental Health</option>
+        <option value="Behavior">Behavior</option>
+        <option value="Academics">Academics</option>
+        <option value="Work Completion">Work Completion</option>
+      </select>
+      <button class="btn-add" onclick="addReferral()">+ Add</button>
+    </div>
+
+    <div class="stats-bar" id="tracker-stats"></div>
+
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div id="referral-body"></div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: PowerSchool ══ -->
+  <div class="tab-panel" id="tab-powerschool">
+    <div class="sec-head">
+      <h2>PowerSchool MTSS Process</h2>
+      <p>How interventions are logged, communicated, and tracked in PowerSchool at EMS.</p>
+    </div>
+
+    <!-- Icon location callout -->
+    <div class="card" style="margin-bottom:1.25rem;border-left:4px solid var(--purple);padding:1rem 1.25rem;display:flex;gap:14px;align-items:flex-start;">
+      <div style="font-size:2rem;flex-shrink:0;">🔺</div>
+      <div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.95rem;margin-bottom:4px;">Find the MTSS Icon in PowerSchool</div>
+        <div style="font-size:0.82rem;color:var(--text);line-height:1.6;">
+          Look for the <strong>MTSS Pyramid icon</strong> on each student's page — located in the same icon row as Medical Alerts, Email Teachers, and Student Services. Click it to view active interventions and notes for that student.
+        </div>
+      </div>
+    </div>
+
+    <!-- Process steps -->
+    <div class="sec-head" style="margin-top:1.5rem;"><h2>How It Works</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem;">
+      <div class="card" style="border-top:3px solid var(--purple);">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📋</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">1. Identify the Intervention</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;">Use team/guidance meetings to discuss student needs and agree on an intervention. Common examples: <strong>schedule breaks, anytime passes, Compass Mark groups, point sheets</strong>, CICO, check-in with counselor.</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--purple-mid);">
+        <div style="font-size:1.4rem;margin-bottom:8px;">🔐</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">2. Enter into PowerSchool</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;"><strong>Counselors, HSVs, School Psychologists, and Admin</strong> are the only staff who can enter new interventions. After a team decision, one of these roles logs it in PS with details and notes.</div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--purple-light);">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📧</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">3. Teachers Are Notified</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;">When a student's intervention is entered, <strong>all current teachers automatically receive an email</strong> from PowerSchool with the intervention details. No extra steps needed from classroom teachers.</div>
+      </div>
+      <div class="card" style="border-top:3px solid #0891b2;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📅</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">4. Weekly Check-In Emails</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;">Each week, teachers receive a list of students with <strong>active interventions</strong> as an FYI. This keeps everyone informed without requiring additional meetings or communication.</div>
+      </div>
+      <div class="card" style="border-top:3px solid #16a34a;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">✅</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">5. Closing an Intervention</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;">When the team decides an intervention is <strong>no longer needed or effective</strong>, the MTSS Pyramid icon is removed from the student's profile. Data is stored historically and follows the student to the next building.</div>
+      </div>
+      <div class="card" style="border-top:3px solid #dc2626;">
+        <div style="font-size:1.4rem;margin-bottom:8px;">📁</div>
+        <div style="font-weight:800;color:var(--purple);font-size:0.88rem;margin-bottom:6px;">6. Historical Record</div>
+        <div style="font-size:0.8rem;color:var(--text);line-height:1.6;">All intervention data is <strong>stored historically</strong> in PowerSchool and transfers with the student to the next building — ensuring continuity of support across grade levels.</div>
+      </div>
+    </div>
+
+    <!-- Behavior Referral Form -->
+    <div class="sec-head" style="margin-top:0.5rem;"><h2>MTSS Behavior Referral Form</h2><p>Complete this before bringing a student to an MTSS meeting. Covers student info, services, concerns, and interventions tried.</p></div>
+    <div class="card" id="behavior-form" style="padding:1.5rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:0.95rem;font-weight:800;color:var(--purple);">Section 1.1 — Student Information</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-add" onclick="printBehaviorForm()" style="background:rgba(73,14,111,0.1);color:var(--purple);font-size:0.75rem;padding:0.35rem 0.85rem;">🖨 Print</button>
+          <button class="btn-add" onclick="clearBehaviorForm()" style="background:rgba(220,38,38,0.08);color:#dc2626;font-size:0.75rem;padding:0.35rem 0.85rem;">Clear Form</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1.25rem;">
+        <div><label class="form-label">Student Name</label><input class="form-input" id="bf-name" placeholder="Last, First" /></div>
+        <div><label class="form-label">Grade</label><input class="form-input" id="bf-grade" placeholder="e.g. 8" /></div>
+        <div><label class="form-label">Teacher / Homeroom</label><input class="form-input" id="bf-teacher" placeholder="Teacher name" /></div>
+        <div><label class="form-label">Date of 1st Meeting</label><input class="form-input" id="bf-date1" type="date" /></div>
+        <div><label class="form-label">Date of 2nd Meeting</label><input class="form-input" id="bf-date2" type="date" /></div>
+        <div><label class="form-label">Parents Aware?</label>
+          <select class="form-input" id="bf-parents"><option value="">Select…</option><option>Yes</option><option>No</option><option>In Progress</option></select></div>
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <label class="form-label">Parent Contact Notes</label>
+        <textarea class="form-input" id="bf-parent-notes" rows="3" placeholder="Date of contact, outcome, parent response…" style="resize:vertical;"></textarea>
+      </div>
+
+      <div style="font-size:0.9rem;font-weight:800;color:var(--purple);margin-bottom:0.75rem;">Areas of Concern</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1.25rem;" id="bf-concerns-grid">
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining quality of work" /><span>Declining quality of work</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining grades" /><span>Declining grades</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Homework not handed in" /><span>Homework not handed in</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Inattentive / difficulty focusing" /><span>Inattentive / difficulty focusing</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Declining motivation" /><span>Declining motivation</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Disruptive in class" /><span>Disruptive in class</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Defiant / Non-Compliance" /><span>Defiant / Non-Compliance</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Withdrawn / socially isolated" /><span>Withdrawn / socially isolated</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Verbal aggression" /><span>Verbal aggression</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Physical aggression" /><span>Physical aggression</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Attendance / chronic absences" /><span>Attendance / chronic absences</span></label>
+        <label class="concern-item"><input type="checkbox" class="bf-concern" value="Increasing non-involvement" /><span>Increasing non-involvement</span></label>
+      </div>
+
+      <div style="margin-bottom:1.25rem;">
+        <label class="form-label">Describe specific behaviors / patterns</label>
+        <textarea class="form-input" id="bf-behavior-desc" rows="3" placeholder="Be specific — what does it look like, how often, under what conditions?" style="resize:vertical;"></textarea>
+      </div>
+
+      <div style="font-size:0.9rem;font-weight:800;color:var(--purple);margin-bottom:0.75rem;">Section 1.2 — Interventions Tried</div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.78rem;" id="bf-interventions-table">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border);">
+              <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Intervention</th>
+              <th style="padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">N/A</th>
+              <th style="padding:6px 8px;color:#16a34a;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">✓ Worked</th>
+              <th style="padding:6px 8px;color:#dc2626;font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">✗ Didn't</th>
+              <th style="padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;">Not Tried</th>
+              <th style="text-align:left;padding:6px 8px;color:var(--muted);font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;">Notes / Dates</th>
+            </tr>
+          </thead>
+          <tbody id="bf-interventions-body"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:1.25rem;">
+        <label class="form-label">Additional Notes / Next Steps</label>
+        <textarea class="form-input" id="bf-notes" rows="3" placeholder="Team recommendations, next meeting agenda items…" style="resize:vertical;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: Resources ══ -->
+  <div class="tab-panel" id="tab-resources">
+    <div class="sec-head">
+      <h2>MTSS Resources &amp; Connected Tools</h2>
+      <p>Reference documents, data tools, and linked EMS systems.</p>
+    </div>
+    <div class="resources-grid">
+      <a class="resource-card" href="https://clashofclasses.org" target="_blank">
+        <div class="resource-icon">⚔️</div>
+        <div class="resource-name">Clash of Classes</div>
+        <div class="resource-desc">Squad-based LRG point system — Tier 1 positive behavior reinforcement engine</div>
+      </a>
+      <a class="resource-card" href="https://bit.ly/traitdough" target="_blank">
+        <div class="resource-icon">🎯</div>
+        <div class="resource-name">Trait Dough</div>
+        <div class="resource-desc">Log LRG traits directly to CoC squad points — quick classroom observation tool</div>
+      </a>
+      <a class="resource-card" href="https://bit.ly/reportlogger" target="_blank">
+        <div class="resource-icon">📋</div>
+        <div class="resource-name">Report Logger</div>
+        <div class="resource-desc">PIN-protected incident report generation — supports Tier 2/3 documentation</div>
+      </a>
+      <a class="resource-card" href="https://docs.google.com/spreadsheets/d/1IVFnkQQvSvNSY_OZPMutPzkTqmJ1j5XYRoT9YvNy-v4/edit" target="_blank">
+        <div class="resource-icon">📊</div>
+        <div class="resource-name">Accountability Log</div>
+        <div class="resource-desc">Staff-only intervention and consequence log — read access for MTSS team</div>
+      </a>
+      <a class="resource-card" href="https://bit.ly/emsstudentleaders" target="_blank">
+        <div class="resource-icon">🏅</div>
+        <div class="resource-name">MLC Handbooks</div>
+        <div class="resource-desc">Leadership track handbooks — Generals, Ambassadors, Delegates, Vanguard</div>
+      </a>
+      <div class="resource-card" style="cursor:default;">
+        <div class="resource-icon">📄</div>
+        <div class="resource-name">MTSS Plan (Google Doc)</div>
+        <div class="resource-desc">
+          <span id="mtss-doc-link">
+            <a href="#" id="mtss-doc-anchor" target="_blank" style="color:var(--purple);font-weight:600;text-decoration:none;">Open Document ↗</a>
+          </span><br>
+          <button onclick="editMtssDoc()" style="margin-top:6px;font-size:0.68rem;font-weight:700;background:none;border:1px solid rgba(73,14,111,0.2);border-radius:8px;padding:2px 8px;color:var(--muted);cursor:pointer;">Edit URL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MTSS Doc URL modal -->
+<div id="doc-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:white;border-radius:18px;padding:1.75rem;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(73,14,111,0.2);">
+    <div style="font-size:1rem;font-weight:800;color:var(--purple);margin-bottom:0.5rem;">MTSS Plan Document URL</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Paste the Google Doc link for the EMS MTSS plan.</div>
+    <input id="doc-url-input" type="url" placeholder="https://docs.google.com/document/d/..." style="width:100%;padding:0.55rem 0.75rem;border-radius:10px;border:1.5px solid rgba(73,14,111,0.25);font-family:'Outfit',sans-serif;font-size:0.85rem;outline:none;color:var(--text);margin-bottom:1rem;" />
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button onclick="cancelDocModal()" style="padding:0.45rem 1rem;border-radius:10px;border:1px solid rgba(73,14,111,0.2);background:none;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:700;color:var(--muted);cursor:pointer;">Cancel</button>
+      <button onclick="saveDocUrl()" style="padding:0.45rem 1.1rem;border-radius:10px;background:var(--purple);color:white;border:none;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_REFERRALS = 'emsmtss_referrals';
+const STORAGE_CHECKLIST = 'emsmtss_checklist';
+const STORAGE_DOC_URL   = 'emsmtss_doc_url';
+
+// ── Tab switching ──
+function switchTab(id) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (id === 'tracker') renderReferrals();
+  if (id === 'checklist') renderChecklist();
+}
+
+// ══ CHECKLIST ══
+const CHECKLIST_DATA = [
+  {
+    domain: 'Academic Systems',
+    icon: '📚',
+    items: [
+      'Learning targets posted & communicated daily',
+      'Flexible grouping structures in place',
+      'High-impact instructional strategies used consistently',
+      'Timely & specific feedback loops with students',
+      'Universal screening data reviewed each marking period',
+      'Re-teach cycles built into unit planning',
+    ]
+  },
+  {
+    domain: 'Behavioral Systems',
+    icon: '🔵',
+    items: [
+      'School-wide behavior expectations explicitly taught',
+      'Classroom routines & procedures established & practiced',
+      'Positive behavior recognition system active (LRG / CoC)',
+      'Consistent, calm classroom management language used',
+      'ODR data reviewed monthly as a team',
+      'Restorative approach used before punitive response',
+    ]
+  },
+  {
+    domain: 'Healthy Living',
+    icon: '💛',
+    items: [
+      'Greeting students at the door daily',
+      'Check-in / check-out structures available',
+      'At least one positive home contact per student this marking period',
+      'LRG trait recognition integrated into daily practice',
+      'SEL moment built into weekly schedule',
+      'Students aware of counseling & mental health resources',
+    ]
+  },
+  {
+    domain: 'Attendance',
+    icon: '📅',
+    items: [
+      'Daily attendance taken & submitted on time',
+      'Students with 2+ absences flagged for outreach',
+      'Attendance data shared with MTSS team monthly',
+      'Positive attendance milestones recognized publicly',
+    ]
+  },
+];
+
+function loadChecklist() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_CHECKLIST) || '{}'); } catch { return {}; }
+}
+function saveChecklist(data) { localStorage.setItem(STORAGE_CHECKLIST, JSON.stringify(data)); }
+
+function renderChecklist() {
+  const state = loadChecklist();
+  const container = document.getElementById('checklist-container');
+  let totalItems = 0, totalChecked = 0;
+
+  container.innerHTML = CHECKLIST_DATA.map(domain => {
+    const checked = domain.items.filter((_, i) => state[domain.domain + '_' + i]);
+    totalItems += domain.items.length;
+    totalChecked += checked.length;
+    const pct = Math.round(checked.length / domain.items.length * 100);
+
+    return `<div class="checklist-domain">
+      <div class="checklist-domain-title">
+        <span>${domain.icon}</span> ${domain.domain}
+        <span style="margin-left:auto;font-size:0.72rem;font-weight:600;color:var(--muted);">${checked.length}/${domain.items.length}</span>
+      </div>
+      <div class="domain-progress"><div class="domain-progress-bar" style="width:${pct}%;"></div></div>
+      ${domain.items.map((item, i) => {
+        const key = domain.domain + '_' + i;
+        const isChecked = !!state[key];
+        return `<div class="checklist-item" onclick="toggleCheck('${key.replace(/'/g,"\\'")}')">
+          <div class="chk-box ${isChecked ? 'checked' : ''}"></div>
+          <span class="chk-label ${isChecked ? 'checked' : ''}">${item}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+
+  // Stats
+  const overallPct = Math.round(totalChecked / totalItems * 100);
+  document.getElementById('checklist-stats').innerHTML = `
+    <div class="stat-chip"><div class="stat-num">${totalChecked}</div><div class="stat-label">Checked</div></div>
+    <div class="stat-chip"><div class="stat-num">${totalItems - totalChecked}</div><div class="stat-label">Remaining</div></div>
+    <div class="stat-chip"><div class="stat-num">${overallPct}%</div><div class="stat-label">Complete</div></div>
+  `;
+}
+
+function toggleCheck(key) {
+  const state = loadChecklist();
+  state[key] = !state[key];
+  saveChecklist(state);
+  renderChecklist();
+}
+
+function resetChecklist() {
+  if (!confirm('Reset all checklist items?')) return;
+  localStorage.removeItem(STORAGE_CHECKLIST);
+  renderChecklist();
+}
+
+// ══ REFERRAL TRACKER ══
+function loadReferrals() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_REFERRALS) || '[]'); } catch { return []; }
+}
+function saveReferrals(arr) { localStorage.setItem(STORAGE_REFERRALS, JSON.stringify(arr)); }
+
+function addReferral() {
+  const note   = document.getElementById('ref-note').value.trim();
+  const tier   = document.getElementById('ref-tier').value;
+  const domain = document.getElementById('ref-domain').value;
+  if (!tier || !domain) { alert('Tier and domain are required.'); return; }
+
+  const arr = loadReferrals();
+  arr.push({ id: Date.now(), note, tier, domain, date: new Date().toLocaleDateString('en-US', {month:'short',day:'numeric'}) });
+  saveReferrals(arr);
+
+  document.getElementById('ref-note').value = '';
+  document.getElementById('ref-tier').value = '';
+  document.getElementById('ref-domain').value = '';
+  renderReferrals();
+}
+
+function removeReferral(id) {
+  const arr = loadReferrals().filter(r => r.id !== id);
+  saveReferrals(arr);
+  renderReferrals();
+}
+
+function renderReferrals() {
+  const arr = loadReferrals();
+  const body = document.getElementById('referral-body');
+
+  // Stats
+  const t1 = arr.filter(r => r.tier === '1').length;
+  const t2 = arr.filter(r => r.tier === '2').length;
+  const t3 = arr.filter(r => r.tier === '3').length;
+  document.getElementById('tracker-stats').innerHTML = `
+    <div class="stat-chip"><div class="stat-num" style="color:#15803d;">${t1}</div><div class="stat-label">Tier 1</div></div>
+    <div class="stat-chip"><div class="stat-num" style="color:#a16207;">${t2}</div><div class="stat-label">Tier 2</div></div>
+    <div class="stat-chip"><div class="stat-num" style="color:#b91c1c;">${t3}</div><div class="stat-label">Tier 3</div></div>
+    <div class="stat-chip"><div class="stat-num">${arr.length}</div><div class="stat-label">Total</div></div>
+  `;
+
+  if (!arr.length) {
+    body.innerHTML = `<div class="empty-state"><div>📋</div>No interventions tracked yet. Add one above — no student names needed.<br><a href="https://behaviorinterventioncenter.com" target="_blank" style="color:var(--purple);font-weight:700;font-size:0.8rem;">Use BIC for student-specific records ↗</a></div>`;
+    return;
+  }
+
+  body.innerHTML = `<table class="referral-table">
+    <thead><tr>
+      <th>Description</th><th>Tier</th><th>Domain</th><th>Added</th><th></th>
+    </tr></thead>
+    <tbody>
+      ${arr.map(r => `<tr>
+        <td style="color:var(--muted);">${escHtml(r.note || '—')}</td>
+        <td><span class="tier-badge t${r.tier}">Tier ${r.tier}</span></td>
+        <td><span class="domain-badge">${escHtml(r.domain)}</span></td>
+        <td style="color:var(--muted);font-size:0.72rem;font-family:'DM Mono',monospace;">${r.date}</td>
+        <td><button class="btn-remove" onclick="removeReferral(${r.id})">✕</button></td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══ MTSS DOC URL ══
+function initDocUrl() {
+  const saved = localStorage.getItem(STORAGE_DOC_URL) || 'https://docs.google.com/document/d/1xh0tRe_t7gDc2FBVGSDDYQsC-PdKSjdMwWaL4LqL4ig/edit';
+  const anchor = document.getElementById('mtss-doc-anchor');
+  if (anchor) anchor.href = saved;
+}
+
+function editMtssDoc() {
+  const saved = localStorage.getItem(STORAGE_DOC_URL) || '';
+  document.getElementById('doc-url-input').value = saved;
+  document.getElementById('doc-modal').style.display = 'flex';
+}
+function cancelDocModal() { document.getElementById('doc-modal').style.display = 'none'; }
+function saveDocUrl() {
+  const url = document.getElementById('doc-url-input').value.trim();
+  if (url) {
+    localStorage.setItem(STORAGE_DOC_URL, url);
+    document.getElementById('mtss-doc-anchor').href = url;
+  }
+  cancelDocModal();
+}
+
+// ══ EDIT MODE ══
+const MTSS_EDITS_KEY = 'emsmtss_content_edits';
+let editMode = false;
+
+const EDITABLE_SELECTORS = [
+  'h1','h2','h3',
+  '.sec-head p',
+  '.hero p',
+  '.hero-badge',
+  '.meeting-name','.meeting-meta span','.meeting-members','.meeting-tag',
+  '.tier-cell li','.tier-domain-label','.tier-header',
+  '.resource-name','.resource-desc',
+  '.checklist-domain-title','.chk-label',
+  '.stat-label',
+  '.card p','.card li','.card div[style*="font-weight"]',
+  'a.resource-card .resource-name','a.resource-card .resource-desc',
+  '[style*="font-weight:800"]','[style*="font-weight: 800"]',
+].join(',');
+
+function getEK(el) {
+  if (el._emsMtssEK) return el._emsMtssEK;
+  const parts = [];
+  let node = el;
+  while (node && node !== document.body) {
+    const parent = node.parentElement;
+    if (parent) {
+      const idx = Array.from(parent.children).indexOf(node);
+      parts.unshift(node.tagName + idx);
+    }
+    node = node.parentElement;
+  }
+  el._emsMtssEK = parts.join('>');
+  return el._emsMtssEK;
+}
+
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn = document.getElementById('edit-mode-btn');
+  const hint = document.getElementById('edit-hint');
+  btn.textContent = editMode ? '✓ Done Editing' : '✎ Edit Content';
+  btn.style.background = editMode ? 'var(--purple)' : 'white';
+  btn.style.color = editMode ? 'white' : 'var(--purple)';
+  hint.style.display = editMode ? 'block' : 'none';
+
+  // Find all editable elements
+  const els = new Set();
+  document.querySelectorAll(EDITABLE_SELECTORS).forEach(el => els.add(el));
+  // Also grab any element with visible text that isn't a container
+  document.querySelectorAll('.tab-panel *').forEach(el => {
+    if (el.children.length === 0 && el.textContent.trim().length > 0) els.add(el);
+  });
+
+  els.forEach(el => {
+    // Skip inputs, buttons, selects, textareas
+    if (['INPUT','SELECT','TEXTAREA','BUTTON'].includes(el.tagName)) return;
+    // Skip script/style
+    if (['SCRIPT','STYLE'].includes(el.tagName)) return;
+    el.contentEditable = editMode ? 'true' : 'false';
+    el.style.outline = editMode ? '1px dashed rgba(73,14,111,0.3)' : '';
+    el.style.borderRadius = editMode ? '3px' : '';
+    el.style.minWidth = editMode ? '12px' : '';
+  });
+
+  // Link href editing
+  if (editMode) {
+    document.querySelectorAll('a[href]').forEach(a => {
+      if (a._editHrefListener) return;
+      a._editHrefListener = (e) => {
+        if (!editMode) return;
+        e.preventDefault();
+        const current = a.getAttribute('href') || '';
+        const newHref = prompt('Edit link URL:', current);
+        if (newHref !== null) {
+          a.setAttribute('href', newHref);
+          saveEdit('href::' + getEK(a), newHref);
+        }
+      };
+      a.addEventListener('dblclick', a._editHrefListener);
+    });
+  }
+}
+
+function saveEdit(key, value) {
+  const edits = JSON.parse(localStorage.getItem(MTSS_EDITS_KEY) || '{}');
+  edits[key] = value;
+  localStorage.setItem(MTSS_EDITS_KEY, JSON.stringify(edits));
+}
+
+// Save on blur (capture phase so we get all blur events)
+document.addEventListener('blur', (e) => {
+  if (!editMode) return;
+  const el = e.target;
+  if (['INPUT','SELECT','TEXTAREA','BUTTON','SCRIPT','STYLE'].includes(el.tagName)) return;
+  if (el.isContentEditable) {
+    saveEdit(getEK(el), el.innerHTML);
+  }
+}, true);
+
+function applyEdits() {
+  const edits = JSON.parse(localStorage.getItem(MTSS_EDITS_KEY) || '{}');
+  if (!Object.keys(edits).length) return;
+  // Build a map of EK → element for all potential editables
+  const allEls = new Set();
+  document.querySelectorAll('.tab-panel *').forEach(el => allEls.add(el));
+  allEls.forEach(el => {
+    if (['INPUT','SELECT','TEXTAREA','BUTTON','SCRIPT','STYLE'].includes(el.tagName)) return;
+    const ek = getEK(el);
+    if (edits[ek] !== undefined) el.innerHTML = edits[ek];
+    const hrefKey = 'href::' + ek;
+    if (edits[hrefKey] !== undefined && el.setAttribute) el.setAttribute('href', edits[hrefKey]);
+  });
+  // Restore hrefs on links
+  document.querySelectorAll('a[href]').forEach(a => {
+    const key = 'href::' + getEK(a);
+    if (edits[key] !== undefined) a.setAttribute('href', edits[key]);
+  });
+}
+
+// ══ BEHAVIOR FORM ══
+const INTERVENTIONS = [
+  'Change in seating – proximity to teacher',
+  'Change in seating – proximity to peers',
+  'Special considerations with work partners/groups',
+  'Individual checks for understanding',
+  'Academic adaptations (graphic organizers, assignment length)',
+  'Testing adaptations (oral, time extensions)',
+  'Organizational supports (checklists, color coding)',
+  'Additional adult support (para, individualized teacher time)',
+  'Increased opportunities for movement / flexible seating',
+  'Cues for behavior (secret signal, checklist on desk)',
+  'Distractibility considerations (limited materials, privacy carrel)',
+  'Schedule breaks / anytime pass',
+  'Point sheet / behavior chart',
+  'Compass Mark group',
+  'Check-In/Check-Out (CICO)',
+  'Counselor check-in',
+  'Parent contact / communication plan',
+  'Positive reinforcement / recognition system',
+];
+
+function buildInterventionsTable() {
+  const tbody = document.getElementById('bf-interventions-body');
+  if (!tbody) return;
+  tbody.innerHTML = INTERVENTIONS.map((name, i) => `
+    <tr class="interv-row">
+      <td>${name}</td>
+      ${['na','worked','didnt','nottried'].map(v => `<td style="text-align:center"><input type="radio" name="interv-${i}" value="${v}" /></td>`).join('')}
+      <td><input type="text" placeholder="Notes…" id="interv-note-${i}" /></td>
+    </tr>`).join('');
+}
+
+function clearBehaviorForm() {
+  if (!confirm('Clear all form fields?')) return;
+  ['bf-name','bf-grade','bf-teacher','bf-date1','bf-date2','bf-parent-notes','bf-behavior-desc','bf-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('bf-parents').value = '';
+  document.querySelectorAll('.bf-concern').forEach(c => c.checked = false);
+  document.querySelectorAll('.interv-row input').forEach(i => { if(i.type==='radio') i.checked=false; else i.value=''; });
+}
+
+function printBehaviorForm() {
+  const name = document.getElementById('bf-name').value || 'Student';
+  const grade = document.getElementById('bf-grade').value;
+  const teacher = document.getElementById('bf-teacher').value;
+  const date1 = document.getElementById('bf-date1').value;
+  const date2 = document.getElementById('bf-date2').value;
+  const parents = document.getElementById('bf-parents').value;
+  const parentNotes = document.getElementById('bf-parent-notes').value;
+  const behaviorDesc = document.getElementById('bf-behavior-desc').value;
+  const notes = document.getElementById('bf-notes').value;
+  const concerns = [...document.querySelectorAll('.bf-concern:checked')].map(c => c.value);
+
+  const intervRows = INTERVENTIONS.map((name, i) => {
+    const checked = document.querySelector(`input[name="interv-${i}"]:checked`);
+    const status = checked ? {na:'N/A',worked:'✓ Successful',didnt:'✗ Unsuccessful',nottried:'Not Trialed'}[checked.value] : '';
+    const noteVal = document.getElementById(`interv-note-${i}`)?.value || '';
+    if (!status && !noteVal) return '';
+    return `<tr><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px">${name}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px;white-space:nowrap">${status}</td><td style="padding:4px 8px;border-bottom:1px solid #eee;font-size:12px">${noteVal}</td></tr>`;
+  }).filter(Boolean).join('');
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>MTSS Referral — ${name}</title>
+  <style>body{font-family:Arial,sans-serif;padding:24px;color:#1a0030;max-width:800px;margin:0 auto}
+  h1{font-size:18px;color:#490e6f;margin-bottom:4px}h2{font-size:13px;color:#490e6f;margin:16px 0 6px;border-bottom:2px solid #490e6f;padding-bottom:3px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:12px;margin-bottom:8px}
+  .field{margin-bottom:4px}.label{font-size:10px;text-transform:uppercase;color:#7c5fa0;letter-spacing:0.05em}
+  .val{font-weight:600}table{width:100%;border-collapse:collapse}
+  @media print{body{padding:12px}}</style></head><body>
+  <h1>EMS MTSS Behavior Referral Form</h1>
+  <div style="font-size:11px;color:#7c5fa0;margin-bottom:12px">Printed ${new Date().toLocaleDateString()}</div>
+  <h2>Section 1.1 — Student Information</h2>
+  <div class="grid">
+    <div class="field"><div class="label">Student Name</div><div class="val">${name}</div></div>
+    <div class="field"><div class="label">Grade</div><div class="val">${grade||'—'}</div></div>
+    <div class="field"><div class="label">Teacher</div><div class="val">${teacher||'—'}</div></div>
+    <div class="field"><div class="label">Parents Aware</div><div class="val">${parents||'—'}</div></div>
+    <div class="field"><div class="label">1st Meeting</div><div class="val">${date1||'—'}</div></div>
+    <div class="field"><div class="label">2nd Meeting</div><div class="val">${date2||'—'}</div></div>
+  </div>
+  ${parentNotes?`<div class="field"><div class="label">Parent Contact Notes</div><div>${parentNotes}</div></div>`:''}
+  ${concerns.length?`<h2>Areas of Concern</h2><ul style="font-size:12px;margin:0;padding-left:16px">${concerns.map(c=>`<li>${c}</li>`).join('')}</ul>`:''}
+  ${behaviorDesc?`<h2>Behavior Description</h2><div style="font-size:12px">${behaviorDesc}</div>`:''}
+  ${intervRows?`<h2>Section 1.2 — Interventions Tried</h2><table><thead><tr><th style="text-align:left;font-size:11px;padding:4px 8px;background:#f5f3f8">Intervention</th><th style="font-size:11px;padding:4px 8px;background:#f5f3f8">Status</th><th style="text-align:left;font-size:11px;padding:4px 8px;background:#f5f3f8">Notes</th></tr></thead><tbody>${intervRows}</tbody></table>`:''}
+  ${notes?`<h2>Notes / Next Steps</h2><div style="font-size:12px">${notes}</div>`:''}
+  </body></html>`);
+  win.document.close();
+  win.print();
+}
+
+// ── Init ──
+window.addEventListener('DOMContentLoaded', () => {
+  initDocUrl();
+  applyEdits();
+  renderChecklist();
+  renderReferrals();
+  buildInterventionsTable();
+  document.getElementById('doc-modal').style.display = 'none';
+});
+</script>
+</body>
+</html>
